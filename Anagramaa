@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#define MAXIMA_LONGITUD_CADENA 100
+void removerCaracteres(char *cadena, char *caracteres);
+int comparar(const void *a, const void *b);
+int esAnagrama(char *cadena, char *otraCadena);
+int main() {
+char palabras[9][2][MAXIMA_LONGITUD_CADENA] = {
+{"Amor", "Roma"},
+{"deal", "lead"},
+{"dad", "add"},
+{"armor", "under"},
+{"cooler", "corel"},
+{"silent", "listen"},
+{"rock", "rock"},
+{"Tom Marvolo Riddle", "I am lord Voldemort"},
+{"need", "eden"}};
+for (int x = 0; x < 9; x++) {
+printf("\n\nProbando con '%s' y '%s'\n", palabras[x][0], palabras[x][1]);
+int resultado = esAnagrama(palabras[x][0], palabras[x][1]);
+if (resultado) {
+printf("SON anagramas");
+} else {
+printf("NO SON anagramas");
+}
+}
+
+return EXIT_SUCCESS;
+}
+
+int comparar(const void *a, const void *b) {
+return strcmp((char *)a, (char *)b);
+}
+
+void removerCaracteres(char *cadena, char *caracteres) {
+int indiceCadena = 0, indiceCadenaLimpia = 0;
+int deberiaAgregarCaracter = 1;
+while (cadena[indiceCadena]) {
+deberiaAgregarCaracter = 1;
+int indiceCaracteres = 0;
+while (caracteres[indiceCaracteres]) {
+if (cadena[indiceCadena] == caracteres[indiceCaracteres]) {
+deberiaAgregarCaracter = 0;
+}
+indiceCaracteres++;
+}
+if (deberiaAgregarCaracter) {
+cadena[indiceCadenaLimpia] = cadena[indiceCadena];
+indiceCadenaLimpia++;
+}
+indiceCadena++;
+}
+cadena[indiceCadenaLimpia] = 0;
+}
+
+int esAnagrama(char *palabra, char *otraPalabra) {
+
+removerCaracteres(palabra, " ,.!");
+removerCaracteres(otraPalabra, " ,.!");
+
+int contador = 0;
+while (palabra[contador]) {
+palabra[contador] = tolower(palabra[contador]);
+contador++;
+}
+contador = 0;
+while (otraPalabra[contador]) {
+otraPalabra[contador] = tolower(otraPalabra[contador]);
+contador++;
+}
+
+qsort(otraPalabra, strlen(otraPalabra), sizeof(char), comparar);
+qsort(palabra, strlen(palabra), sizeof(char), comparar);
+
+return strcmp(palabra, otraPalabra) == 0;
+}
